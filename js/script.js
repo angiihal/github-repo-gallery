@@ -1,5 +1,7 @@
 // Div where profile information will appear
 const overview = document.querySelector(".overview");
+// Unordered List to display repos list
+const reposList = document.querySelector(".repo-list");
 const username = "angiihal";
 
 const getProfileInfo = async function () {
@@ -7,7 +9,6 @@ const getProfileInfo = async function () {
         `https://api.github.com/users/${username}`
     );
     const data = await users.json();
-    console.log(data);
     userData(data);
 };
 getProfileInfo();
@@ -27,4 +28,24 @@ const userData = function (data) {
             <p><strong>Number of public repos:</strong> ${data.public_repos}</p>
         </div> `
     overview.append(div);
+    getRepos();
+};
+
+const getRepos = async function () {
+    const repos = await fetch (
+        `https://api.github.com/users/${username}/repos?sort=updated&per_page=100`
+    );
+    const res = await repos.json();
+    console.log(res);
+    repoInfo(res);
+};
+
+// Function to display info about repos
+const repoInfo = function (repos) {
+    for (let repo of repos) {
+        const li = document.createElement("li");
+        li.classList.add("repo");
+        li.innerHTML = `<h3>${repo.name}</h3>`
+        reposList.append(li);
+    }
 };
