@@ -5,6 +5,10 @@ const reposList = document.querySelector(".repo-list");
 const username = "angiihal";
 const repoInformation = document.querySelector(".repos");
 const repoData = document.querySelector(".repo-data");
+// Back to repo gallery button
+const backToRepos = document.querySelector(".view-repos");
+// Search for repos in the gallery
+const filterInput = document.querySelector(".filter-repos");
 
 const getProfileInfo = async function () {
     const users = await fetch (
@@ -44,6 +48,7 @@ const getRepos = async function () {
 
 // Function to display info about repos
 const repoInfo = function (repos) {
+    filterInput.classList.remove("hide");
     for (let repo of repos) {
         const li = document.createElement("li");
         li.classList.add("repo");
@@ -92,4 +97,27 @@ const displayRepoInfo = function (repoInfo, languages) {
     repoData.append(div);
     repoData.classList.remove("hide")
     repoInformation.classList.add("hide");
+    backToRepos.classList.remove("hide");
 };
+
+backToRepos.addEventListener("click", function () {
+    repoInformation.classList.remove("hide");
+    repoData.classList.add("hide");
+    backToRepos.classList.add("hide");
+});
+
+filterInput.addEventListener("input", function (e) {
+    const search = e.target.value;
+    //console.log(value);
+    const repos = document.querySelectorAll(".repo");
+    const searchLowerCase = search.toLowerCase();
+
+    for (let repo of repos) {
+        const repoLowerCase = repo.innerText.toLowerCase();
+        if (repoLowerCase.includes(searchLowerCase)) {
+            repo.classList.remove("hide");
+        } else {
+            repo.classList.add("hide");
+        }
+    }
+});
